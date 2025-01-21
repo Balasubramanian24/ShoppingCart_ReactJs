@@ -1,4 +1,4 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { useUser } from "./UserContext";
 
@@ -13,14 +13,25 @@ export const useCart = () => {
 // CartProvider component
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
- 
   const { userId } = useUser();
 
-  const prepareCartForBackend = (cartItems) => {
-    return cartItems.map((item) => ({
-      productId: item.id,
-      quantity: item.quantity,
-    }));
+  //load cart from local storage
+  useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    setCartItems(storedCart);
+
+   //sync with backend if user is logged in
+
+    if(userId && storedCart.length > 0) {
+      syncCartWithBackend(storedCart).catch((error) => 
+        console.error('Error syncing cart on load:', error)
+      );
+    }
+  }, [userId]);
+
+  //save cart for localstorage
+  const saveCartToLocalStorage = (cart) => {
+    localStorage.setItem("cart", JSON.stringify(cart));
   };
 
   // Sync cart with backend
@@ -44,47 +55,50 @@ export const CartProvider = ({ children }) => {
 
   // Add item to cart
   const addToCart = async (product) => {
-    let updatedCart;
-    // Calculate updatedCart explicitly
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.id === product.id);
-      updatedCart = existingItem
-        ? prevItems.map((item) =>
-            item.id === product.id
-              ? { ...item, quantity: item.quantity + 1 }
-              : item
-          )
-        : [...prevItems, { ...product, quantity: 1 }];
-      return updatedCart;
-    });
-    // Sync with backend after updatedCart is prepared
+    const updatedCart = cartItems.some(item => item.id === product.id)
+        ? cartItems.map(item => item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+        : [...cartItems, { ...product, quantity: 1 }];
+
+    setCartItems(updatedCart); 
+    saveCartToLocalStorage(updatedCart);
+
+    // Sync with backend
     try {
-      await syncCartWithBackend(prepareCartForBackend(updatedCart));
-      alert("Cart updated successfully");
+        const backendCart = prepareCartForBackend(updatedCart);
+        await syncCartWithBackend(backendCart);
     } catch (error) {
-      console.log(error);
-      alert("Failed to update cart");
+        console.error("Failed to sync cart with backend", error);
     }
   };
   
+  // Remove item from cart
+  const removeFromCart = async (id) => {
+    const updatedCart = cartItems.filter((item) => item.id !== id);
+    setCartItems(updatedCart);
+    saveCartToLocalStorage(updatedCart);
   
-    // Remove item from cart
-    const removeFromCart = async (id) => {
-      let updatedCart;
-      setCartItems((prevItems) => {
-        updatedCart = prevItems.filter((item) => item.id !== id)
-        return updatedCart;
-      })
-
-      // Sync with backend after updatedCart is prepared
-      try {
-        await syncCartWithBackend(prepareCartForBackend(updatedCart));
-        alert("Cart updated successfully");
-      } catch (error) {
-        console.log(error);
-        alert("Failed to update cart");
-      }
+    // Sync with backend
+    try {
+      const backendCart = prepareCartForBackend(updatedCart);
+      await syncCartWithBackend(backendCart);
+    } catch (error) {
+      console.error("Failed to sync with backend", error);
     }
+  };
+
+
+  //Prepare cart for backend
+  const prepareCartForBackend = (cart) => {
+    return cart
+      .filter(item => item.id && item.quantity > 0)
+      .map((item) => ({
+      productId: item.id,
+      quantity: item.quantity,
+    }));
+  };
 
   return (
     <CartContext.Provider

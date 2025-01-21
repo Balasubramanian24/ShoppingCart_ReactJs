@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true },
   cart: [
     {
-      productId: { type: Number, ref: 'Product' },
+      productId: { type: String, required: true },
       quantity: { type: Number, required: true },
     },
   ],

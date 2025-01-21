@@ -40,7 +40,7 @@ const { addToCart } = useCart(); //Destructure addToCart from CartContext
 //showing Toast notification
       toast.success(`${product.title} added to your cart.!`, {
         position: "top-center",
-        autoClose: 3000,
+        autoClose: 2000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,

@@ -15,7 +15,7 @@ export default function Home() {
     return (
       <div className="home text-center">
         <div className="container mt-5">
-          <h1>Hi, {username}!</h1>
+          <h1>Hi, {username}</h1>
           <h1 className="mb-4">Welcome to ShopEasy</h1>
           <p className="lead">Your one-stop solution for all your needs.</p>
           <div id="carouselExampleFade" className="carousel slide carousel-fade" data-bs-ride="carousel">
@@ -39,6 +39,7 @@ export default function Home() {
               <span className="visually-hidden">Next</span>
             </button>
           </div>
+          <br /><br />
         </div>
       </div>
     );

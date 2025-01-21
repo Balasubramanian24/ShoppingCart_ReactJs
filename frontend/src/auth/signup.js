@@ -35,7 +35,7 @@ const Signup = () => {
   }
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 mb-5">
       <div className="row justify-content-center">
         <div className="col-md-6">
           <div className="card shadow">
@@ -79,13 +79,15 @@ const Signup = () => {
                   Signup
                 </button>
               </form>
-              <p>Already have an Account, Please Login here.</p>
-              <Link to="/login" className="btn btn-primary w-50">
-              Login
-              </Link>
-              <div className="container mt-5">
-              {error && <div className="alert alert-danger m-2 p-2">{error}</div>}
-            </div>
+              <p className="text-center mt-3">Already have an Account? Please Login here.</p>
+              <div className="text-center">
+                <Link to="/login" className="btn btn-primary w-50">
+                  Login
+                </Link>
+              </div>
+              {error && (
+                <div className="alert alert-danger m-2 p-2 text-center">{error}</div>
+              )}
             </div>
           </div>
         </div>
