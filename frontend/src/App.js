@@ -2,7 +2,7 @@ import { Route, createBrowserRouter,
   createRoutesFromElements, RouterProvider,
 } from "react-router-dom";
 import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe }  from "@stripe/stripe-js";
 
 //Pages
 import Home from "./pages/Home";
