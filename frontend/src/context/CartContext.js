@@ -41,7 +41,7 @@ export const CartProvider = ({ children }) => {
       return;
     }
     try {
-      const response = await axios.post("http://localhost:5000/api/cart/update", {
+      const response = await axios.post( `${import.meta.env.REACT_APP_API_URL}/api/cart/update`, {
         userId,
         cart: updatedCart,
       });

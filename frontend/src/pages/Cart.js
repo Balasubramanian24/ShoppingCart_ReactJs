@@ -15,7 +15,7 @@ const Cart = () => {
     const fetchCartitems = async () => {
       if (!userId) return;
       try {
-        const res = await axios.get(`http://localhost:5000/api/cart/${userId}`);
+        const res = await axios.get( `${import.meta.env.REACT_APP_API_URL}/api/cart/${userId}`);
         if (res.data && Array.isArray(res.data.cart)) {
           setCartItems(res.data.cart);
         } else {
@@ -82,7 +82,7 @@ const Cart = () => {
         quantity: updatedQuantity,
       };
 
-      const res = await axios.put('http://localhost:5000/api/cart/update-cart', payload);
+      const res = await axios.put( `${import.meta.env.REACT_APP_API_URL}/api/cart/update-cart`, payload);
   
       if (res.data && res.data.cart) {
         console.log("Cart updated:", res.data.cart);

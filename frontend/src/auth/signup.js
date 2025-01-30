@@ -23,7 +23,7 @@ const Signup = () => {
       return;
     }
 
-    axios.post('http://localhost:5000/auth/signup', { username, email, password })
+    axios.post( `${import.meta.env.REACT_APP_API_URL}/auth/signup`, { username, email, password })
       .then((result) => {
         console.log('Signup success:', result);
         navigate('/login')

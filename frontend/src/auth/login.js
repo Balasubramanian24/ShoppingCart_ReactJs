@@ -13,7 +13,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post('http://localhost:5000/auth/login', { email, password })
+      .post(`${import.meta.env.REACT_APP_API_URL}/auth/login`, { email, password })
       .then((result) => {
         if (result.data.token && result.data.user) {
           localStorage.setItem('authToken', result.data.token);
