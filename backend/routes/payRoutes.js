@@ -8,7 +8,7 @@ const router = express.Router();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 
-router.post("/api/payment", async (req, res) =>{
+router.post("/api/pay", async (req, res) =>{
     try {
         const { amount, currency } = req.body;
 

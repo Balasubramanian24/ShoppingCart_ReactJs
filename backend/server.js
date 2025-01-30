@@ -12,13 +12,15 @@ const app = express();
 connectDB();
 
 
-app.use(cors());
+app.use(cors({
+    origin: 'https://shopeasy-iota.vercel.app'
+}));
 app.use(express.json());
 
 
 app.use('/auth', authRoutes);
 app.use('/api/cart', cartRoutes);
-app.use(payRoutes);
+app.use('/api/pay', payRoutes);
 
 
 const PORT = process.env.PORT  || 5000;
